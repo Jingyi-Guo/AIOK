@@ -12,6 +12,6 @@ public class Homepage extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_classes, container, false);
+        return inflater.inflate(R.layout.fragment_homepage, container, false);
     }
 }
