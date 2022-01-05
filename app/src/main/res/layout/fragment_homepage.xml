@@ -1,6 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <EditText
+        android:id="@+id/editTextTextMultiLine"
+        android:layout_width="373dp"
+        android:layout_height="155dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="62dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="5dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:text="IOK education is sought by families for their children because they are looking for excellence. We are committed to producing disciplined, hardworking students who will have sound understanding of both Islamic and Secular Education"
+        app:layout_constraintBottom_toTopOf="@+id/imageView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="439dp"
+        android:layout_height="295dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="36dp"
+        android:alpha="0.8"
+        android:background="#00FFFFFF"
+        android:rotation="0"
+        android:rotationX="0"
+        android:rotationY="0"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
+        app:srcCompat="@drawable/_022_01_05" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="424dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:background="#A0B589"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/editTextTextPersonName2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Homepage"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="422dp"
+        android:layout_height="94dp"
+        android:background="#A0B589"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"></LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
