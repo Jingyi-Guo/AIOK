@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +20,8 @@ public class Signup extends AppCompatActivity {
     TextInputEditText textInputEditTextfullname, textInputEditTextusername, textInputEditTextemail,
             textInputEditTextpassword, textInputEditTextconfirm_password;
     Button buttonSignUp;
-    TextView textLoginText;
+    TextView textViewloginText;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,17 @@ public class Signup extends AppCompatActivity {
         textInputEditTextconfirm_password = findViewById(R.id.confirm_password);
 
         buttonSignUp = findViewById(R.id.buttonSignUp);
-        textLoginText = findViewById(R.id.loginText);
+        textViewloginText = findViewById(R.id.loginText);
+        progressBar = findViewById(R.id.progress);
+
+        textViewloginText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Login.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +60,7 @@ public class Signup extends AppCompatActivity {
 
                 if (!fullname.equals("") && !username.equals("") && !password.equals("") && !email.equals("") && password.equals(confirm_password)) {
 
+                    progressBar.setVisibility(View.VISIBLE);
                     Handler handler = new Handler(Looper.getMainLooper());
                     handler.post(new Runnable() {
                         @Override
@@ -66,9 +79,10 @@ public class Signup extends AppCompatActivity {
                             data[1] = "username";
                             data[2] = "password";
                             data[3] = "email";
-                            PutData putData = new PutData("http://192.168.12.16/majima/signup.php", "POST", field, data);
+                            PutData putData = new PutData("http://192.168.12.16/loginRegister/signup.php", "POST", field, data);
                             if (putData.startPut()) {
                                 if (putData.onComplete()) {
+                                    progressBar.setVisibility(View.GONE);
                                     String result = putData.getResult();
                                     if (result.equals("Sign Up Success")) {
                                         Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
