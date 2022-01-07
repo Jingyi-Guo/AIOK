@@ -50,14 +50,14 @@ public class Login extends AppCompatActivity {
                         public void run() {
                             //Starting Write and Read data with URL
                             //Creating array for parameters
-                            String[] field = new String[1];
+                            String[] field = new String[2];
                             field[0] = "username";
                             field[1] = "password";
                             //Creating array for data
-                            String[] data = new String[1];
+                            String[] data = new String[2];
                             data[0] = "username";
                             data[1] = "password";
-                            PutData putData = new PutData("http://192.168.12.16/loginRegister/login.php", "POST", field, data);
+                            PutData putData = new PutData("http://192.168.12.13/loginRegister/login.php", "POST", field, data);
                             if (putData.startPut()) {
                                 if (putData.onComplete()) {
                                     progressBar.setVisibility(View.GONE);

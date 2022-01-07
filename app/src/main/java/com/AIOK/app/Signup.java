@@ -3,7 +3,6 @@ package com.AIOK.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -61,25 +60,24 @@ public class Signup extends AppCompatActivity {
                 if (!fullname.equals("") && !username.equals("") && !password.equals("") && !email.equals("") && password.equals(confirm_password)) {
 
                     progressBar.setVisibility(View.VISIBLE);
-                    Handler handler = new Handler(Looper.getMainLooper());
+                    Handler handler = new Handler();
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
                             //Starting Write and Read data with URL
                             //Creating array for parameters
-                            String[] field = new String[5];
+                            String[] field = new String[4];
                             field[0] = "fullname";
                             field[1] = "username";
                             field[2] = "password";
-                            field[3] = "confirm_password";
-                            field[4] = "email";
+                            field[3] = "email";
                             //Creating array for data
                             String[] data = new String[4];
                             data[0] = "fullname";
                             data[1] = "username";
                             data[2] = "password";
                             data[3] = "email";
-                            PutData putData = new PutData("http://192.168.12.16/loginRegister/signup.php", "POST", field, data);
+                            PutData putData = new PutData("http://192.168.12.13/loginRegister/signup.php", "POST", field, data);
                             if (putData.startPut()) {
                                 if (putData.onComplete()) {
                                     progressBar.setVisibility(View.GONE);
@@ -89,8 +87,7 @@ public class Signup extends AppCompatActivity {
                                         Intent intent = new Intent(getApplicationContext(), Login.class);
                                         startActivity(intent);
                                         finish();
-                                    }
-                                    else {
+                                    } else {
                                         Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                                     }
                                 }
