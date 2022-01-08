@@ -73,11 +73,11 @@ public class Signup extends AppCompatActivity {
                             field[3] = "email";
                             //Creating array for data
                             String[] data = new String[4];
-                            data[0] = "fullname";
-                            data[1] = "username";
-                            data[2] = "password";
-                            data[3] = "email";
-                            PutData putData = new PutData("http://192.168.12.13/loginRegister/signup.php", "POST", field, data);
+                            data[0] = fullname;
+                            data[1] = username;
+                            data[2] = password;
+                            data[3] = email;
+                            PutData putData = new PutData("http://192.168.12.13/loginregister/signup.php", "POST", field, data);
                             if (putData.startPut()) {
                                 if (putData.onComplete()) {
                                     progressBar.setVisibility(View.GONE);

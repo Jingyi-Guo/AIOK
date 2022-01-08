@@ -33,6 +33,15 @@ public class Login extends AppCompatActivity {
         textViewsignupText = findViewById(R.id.signupText);
         progressBar = findViewById(R.id.progress);
 
+        textViewsignupText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Login.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,9 +64,9 @@ public class Login extends AppCompatActivity {
                             field[1] = "password";
                             //Creating array for data
                             String[] data = new String[2];
-                            data[0] = "username";
-                            data[1] = "password";
-                            PutData putData = new PutData("http://192.168.12.13/loginRegister/login.php", "POST", field, data);
+                            data[0] = username;
+                            data[1] = password;
+                            PutData putData = new PutData("http://192.168.12.13/loginregister/login.php", "POST", field, data);
                             if (putData.startPut()) {
                                 if (putData.onComplete()) {
                                     progressBar.setVisibility(View.GONE);
