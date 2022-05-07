@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "554354558852",
+    "project_id": "aiok-3d754",
+    "storage_bucket": "aiok-3d754.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554354558852:android:b3d7de6d86eff1a09affd1",
+        "android_client_info": {
+          "package_name": "com.AIOK.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "554354558852-modkf1akd3fds1am2ot2g6b44184hbck.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBWK7p2EG70YXiMwbJLMtEk7yIRPxr4NI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "554354558852-modkf1akd3fds1am2ot2g6b44184hbck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,33 +2,42 @@ package com.AIOK.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.vishnusivadas.advanced_httpurlconnection.PutData;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Login extends AppCompatActivity {
 
-    TextInputEditText textInputEditTextusername, textInputEditTextpassword;
+    private FirebaseAuth mAuth;
+
+    private TextInputEditText textInputEditTextemail, textInputEditTextpassword;
     Button buttonLogin;
     TextView textViewsignupText;
     ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        textInputEditTextusername=findViewById(R.id.username);
-        textInputEditTextpassword=findViewById(R.id.password);
+        mAuth = FirebaseAuth.getInstance();
+
+        textInputEditTextemail = findViewById(R.id.email);
+        textInputEditTextpassword = findViewById(R.id.password);
+
         buttonLogin = findViewById(R.id.buttonLogin);
         textViewsignupText = findViewById(R.id.signupText);
         progressBar = findViewById(R.id.progress);
@@ -36,7 +45,7 @@ public class Login extends AppCompatActivity {
         textViewsignupText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Login.class);
+                Intent intent = new Intent(getApplicationContext(), Signup.class);
                 startActivity(intent);
                 finish();
             }
@@ -46,51 +55,41 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String username, password;
-                username = String.valueOf(textInputEditTextusername.getText());
+                String email, password;
                 password = String.valueOf(textInputEditTextpassword.getText());
+                email = String.valueOf(textInputEditTextemail.getText());
 
-                if (!username.equals("") && !password.equals("")) {
-
-                    progressBar.setVisibility(View.VISIBLE);
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Starting Write and Read data with URL
-                            //Creating array for parameters
-                            String[] field = new String[2];
-                            field[0] = "username";
-                            field[1] = "password";
-                            //Creating array for data
-                            String[] data = new String[2];
-                            data[0] = username;
-                            data[1] = password;
-                            PutData putData = new PutData("http://192.168.12.17/loginregister/login.php", "POST", field, data);
-                            if (putData.startPut()) {
-                                if (putData.onComplete()) {
-                                    progressBar.setVisibility(View.GONE);
-                                    String result = putData.getResult();
-                                    if (result.equals("Login Success")) {
-                                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                        //The line above indicates which page you land after login
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                    else {
-                                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
-                            //End Write and Read data with URL
-                        }
-                    });
-                } else {
-                    Toast.makeText(getApplicationContext(), "All fields required, and check passwords", Toast.LENGTH_SHORT).show();
+                if (email.isEmpty()) {
+                    textInputEditTextemail.setError("Field cannot be empty");
+                    textInputEditTextemail.requestFocus();
+                    return;
                 }
-            }
 
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    textInputEditTextemail.setError("Invalid email");
+                    textInputEditTextemail.requestFocus();
+                    return;
+                }
+
+                if (password.isEmpty()) {
+                    textInputEditTextemail.setError("Field cannot be empty");
+                    textInputEditTextemail.requestFocus();
+                    return;
+                }
+
+                progressBar.setVisibility(View.VISIBLE);
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            startActivity(new Intent(Login.this, MainActivity.class));
+                        } else {
+                            Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+            }
         });
     }
 }

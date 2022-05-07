@@ -2,21 +2,30 @@ package com.AIOK.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.vishnusivadas.advanced_httpurlconnection.PutData;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class Signup extends AppCompatActivity {
+import java.util.Objects;
 
-    TextInputEditText textInputEditTextfullname, textInputEditTextusername, textInputEditTextemail,
+public class Signup extends AppCompatActivity{
+
+    private FirebaseAuth mAuth;
+
+    private TextInputEditText textInputEditTextfullname, textInputEditTextusername, textInputEditTextemail,
             textInputEditTextpassword, textInputEditTextconfirm_password;
     Button buttonSignUp;
     TextView textViewloginText;
@@ -26,6 +35,8 @@ public class Signup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        mAuth = FirebaseAuth.getInstance();
 
         textInputEditTextfullname = findViewById(R.id.fullname);
         textInputEditTextusername = findViewById(R.id.username);
@@ -46,7 +57,7 @@ public class Signup extends AppCompatActivity {
             }
         });
 
-        buttonSignUp.setOnClickListener(new View.OnClickListener() {
+        buttonSignUp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
 
@@ -57,49 +68,77 @@ public class Signup extends AppCompatActivity {
                 confirm_password = String.valueOf(textInputEditTextconfirm_password.getText());
                 email = String.valueOf(textInputEditTextemail.getText());
 
-                if (!fullname.equals("") && !username.equals("") && !password.equals("") && !email.equals("") && password.equals(confirm_password)) {
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    textInputEditTextemail.setError("Invalid email");
+                    textInputEditTextemail.requestFocus();
+                    return;
+                }
 
-                    progressBar.setVisibility(View.VISIBLE);
-                    Handler handler = new Handler();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Starting Write and Read data with URL
-                            //Creating array for parameters
-                            String[] field = new String[4];
-                            field[0] = "fullname";
-                            field[1] = "username";
-                            field[2] = "password";
-                            field[3] = "email";
-                            //Creating array for data
-                            String[] data = new String[4];
-                            data[0] = fullname;
-                            data[1] = username;
-                            data[2] = password;
-                            data[3] = email;
-                            PutData putData = new PutData("http://192.168.12.7/loginregister/signup.php", "POST", field, data);
-                            if (putData.startPut()) {
-                                if (putData.onComplete()) {
-                                    progressBar.setVisibility(View.GONE);
-                                    String result = putData.getResult();
-                                    if (result.equals("Sign Up Success")) {
-                                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplicationContext(), Login.class);
-                                        startActivity(intent);
-                                        finish();
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-                                    }
+                if (fullname.isEmpty()) {
+                    textInputEditTextfullname.setError("Field cannot be empty");
+                    textInputEditTextfullname.requestFocus();
+                    return;
+                }
+
+                if (username.isEmpty()) {
+                    textInputEditTextusername.setError("Field cannot be empty");
+                    textInputEditTextusername.requestFocus();
+                    return;
+                }
+
+                if (password.isEmpty()) {
+                    textInputEditTextpassword.setError("Field cannot be empty");
+                    textInputEditTextpassword.requestFocus();
+                    return;
+                }
+
+                if (confirm_password.isEmpty()) {
+                    textInputEditTextconfirm_password.setError("Field cannot be empty");
+                    textInputEditTextconfirm_password.requestFocus();
+                    return;
+                }
+
+                if (password.length() <6 ) {
+                    textInputEditTextpassword.setError("Password must be more than 6 characters");
+                    textInputEditTextpassword.requestFocus();
+                    return;
+                }
+
+                if (!password.equals(confirm_password)) {
+                    textInputEditTextpassword.setError("Passwords must match");
+                    textInputEditTextconfirm_password.setError("Passwords must match");
+                    textInputEditTextconfirm_password.requestFocus();
+                    textInputEditTextpassword.requestFocus();
+                    return;
+                }
+
+                progressBar.setVisibility(View.VISIBLE);
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    User user = new User(fullname, username, email);
+                                    FirebaseDatabase.getInstance().getReference("Users")
+                                            .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                            .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(Signup.this, "Sign up successful", Toast.LENGTH_LONG).show();
+                                                progressBar.setVisibility(View.GONE);
+                                            }
+                                            else {
+                                                Toast.makeText(Signup.this, "Sign up failed", Toast.LENGTH_LONG).show();
+                                                progressBar.setVisibility(View.GONE);
+                                            }
+                                        }
+                                    });
                                 }
                             }
-                            //End Write and Read data with URL
-                        }
-                    });
-                } else {
-                    Toast.makeText(getApplicationContext(), "All fields required, and check passwords", Toast.LENGTH_SHORT).show();
-                }
+                        });
             }
-
         });
     }
+
 }
